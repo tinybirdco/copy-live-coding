@@ -1,0 +1,69 @@
+TOKEN "snapshot_token" READ
+
+TOKEN "scheduled_copy_t_285296800e7d4aaf994893d12df6083a" READ
+
+NODE last_5min_deduplicates
+DESCRIPTION >
+    deduplicate
+
+SQL >
+
+    WITH toStartOfFiveMinute(now()) as snapshot_timestamp
+    SELECT toDateTime(snapshot_timestamp) as snapshot_id, *
+    FROM flight_transactions
+    WHERE
+        timestamp BETWEEN (select max(snapshot_id) from flight_snapshots)
+        AND snapshot_timestamp
+    ORDER BY transaction_id, timestamp desc
+    LIMIT 1 BY transaction_id
+
+
+
+NODE prev_snapshot
+SQL >
+
+        SELECT snapshot_id, timestamp, transaction_id, flight_number, extra_bags, priority_boarding, meal_choice
+        FROM flight_snapshots
+        WHERE snapshot_id = (SELECT max(snapshot_id) FROM flight_snapshots)
+          AND transaction_id NOT IN (
+            SELECT transaction_id FROM last_5min_deduplicates
+        )
+
+
+
+
+NODE all_together
+SQL >
+
+    WITH
+         (
+            SELECT snapshot_id FROM last_5min_deduplicates LIMIT 1 BY snapshot_id
+       ) as latest_snapshot_id
+    SELECT
+        ifNull(latest_snapshot_id, toDateTime(0)) as snapshot_id,
+        timestamp,
+        transaction_id,
+        flight_number,
+        extra_bags,
+        priority_boarding,
+        meal_choice
+    from prev_snapshot
+    UNION ALL
+    SELECT
+        snapshot_id,
+        timestamp,
+        transaction_id,
+        flight_number,
+        extra_bags,
+        priority_boarding,
+        meal_choice
+    FROM last_5min_deduplicates
+
+
+
+NODE deduplicate_test_3
+SQL >
+
+    select max(snapshot_id) from flight_snapshots
+
+
