@@ -1,7 +1,5 @@
 TOKEN "deduplicate_token" READ
 
-TOKEN "scheduled_copy_t_07b64b7d824641608c3ca9f760b78ee3" READ
-
 NODE last_5min_deduplicates
 SQL >
 

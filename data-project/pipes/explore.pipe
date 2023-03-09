@@ -2,7 +2,7 @@ NODE explore_0
 SQL >
 
     SELECT flight_number, transaction_id, count() c
-    FROM flight_transactions
+    FROM flight_reservations
     where timestamp > now() - interval 1 hour
     GROUP BY transaction_id, flight_number
     ORDER BY c DESC
@@ -30,7 +30,7 @@ NODE explore_3
 SQL >
 
     SELECT flight_number, count() c
-    FROM flight_transactions
+    FROM flight_reservations
     WHERE timestamp > now() - interval 15 minute
     GROUP BY flight_number
     ORDER BY c DESC
@@ -40,7 +40,7 @@ SQL >
 NODE explore_4
 SQL >
 
-    SELECT * FROM flight_transactions
+    SELECT * FROM flight_reservations
     WHERE flight_number = 'HK808'
 
 

@@ -1,4 +1,22 @@
-NODE flight_transactions_pipe_7155_0
+NODE dedup
+SQL >
+
+    %
+    SELECT 
+    flight_number,
+    extra_bags,
+    priority_boarding,
+    meal_choice
+    FROM flight_reservations
+    where 1
+    and flight_number = {{String(flight, 'AV2310', description="Flight number", required=True)}}
+    order by timestamp desc
+    limit 1 BY transaction_id
+
+
+
+
+NODE result
 SQL >
 
     %
@@ -12,19 +30,7 @@ SQL >
     sumIf(1, meal_choice = 'halal') halal_meals,
     sumIf(1, meal_choice = 'kosher') kosher_meals,
     sumIf(1, meal_choice = 'gluten') gluten_meals
-    FROM flight_transactions
-    where 1
-    and flight_number = {{String(flight, 'AV2310', description="Flight number", required=True)}}
-    and timestamp > now() - interval 1 day
+    FROM dedup
     GROUP BY flight_number
-    order by passengers desc
-
-
-
-
-NODE flight_transactions_pipe_7155_1
-SQL >
-
-    SELECT distinct meal_choice FROM flight_transactions
 
 
