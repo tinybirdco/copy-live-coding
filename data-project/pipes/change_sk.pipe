@@ -1,8 +1,0 @@
-TOKEN "sk_pipe_for_copy" READ
-
-NODE change_sk_0
-SQL >
-
-    SELECT * FROM flight_reservations
-
-

@@ -1,13 +1,16 @@
-TOKEN "deduplicate_token" READ
+TOKEN "snapshot_token" READ
 
-NODE last_5min_deduplicates
+NODE last_batch_deduplicates
+DESCRIPTION >
+    deduplicate
+
 SQL >
 
-    WITH toStartOfFiveMinute(now()) as snapshot_timestamp
-    SELECT toDateTime64(snapshot_timestamp, 3) as snapshot_id, *
-    FROM flight_transactions
+    WITH toStartOfMinute(now()) as snapshot_timestamp
+    SELECT toDateTime(snapshot_timestamp) as snapshot_id, *
+    FROM flight_reservations
     WHERE
-        timestamp BETWEEN snapshot_timestamp - interval 5 day
+        timestamp BETWEEN (select max(snapshot_id) from flight_snapshots)
         AND snapshot_timestamp
     ORDER BY transaction_id, timestamp desc
     LIMIT 1 BY transaction_id
@@ -21,7 +24,7 @@ SQL >
         FROM flight_snapshots
         WHERE snapshot_id = (SELECT max(snapshot_id) FROM flight_snapshots)
           AND transaction_id NOT IN (
-            SELECT transaction_id FROM last_5min_deduplicates
+            SELECT transaction_id FROM last_batch_deduplicates
         )
 
 
@@ -31,14 +34,11 @@ NODE all_together
 SQL >
 
     WITH
-        (
-            SELECT snapshot_id FROM last_5min_deduplicates LIMIT 1 BY snapshot_id
-        ) as latest_snapshot_id
+         (
+            SELECT snapshot_id FROM last_batch_deduplicates LIMIT 1 BY snapshot_id
+       ) as latest_snapshot_id
     SELECT
-    --    ifNull(
-    --        latest_snapshot_id, toDateTime('1970-01-01 00:00:00')
-    --    ) as snapshot_id,
-        latest_snapshot_id,
+        ifNull(latest_snapshot_id, toDateTime(0)) as snapshot_id,
         timestamp,
         transaction_id,
         flight_number,
@@ -55,6 +55,8 @@ SQL >
         extra_bags,
         priority_boarding,
         meal_choice
-    FROM last_5min_deduplicates
+    FROM last_batch_deduplicates
+
+
 
 

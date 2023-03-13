@@ -5,7 +5,7 @@ SCHEMA >
     `transaction_id` String `json:$.transaction_id`,
     `flight_number` String `json:$.flight_number`,
     `extra_bags` Int16 `json:$.extra_bags`,
-    `priority_boarding` Int8 `json:$.priority_boarding`,
+    `priority_boarding` Int16 `json:$.priority_boarding`,
     `meal_choice` String `json:$.meal_choice`
 
 ENGINE "MergeTree"
