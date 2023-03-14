@@ -6,7 +6,7 @@ DESCRIPTION >
 
 SQL >
 
-    WITH toStartOfMinute(now()) as snapshot_timestamp
+    WITH toStartOfMinute(now() - interval 1 minute) as snapshot_timestamp
     SELECT toDateTime(snapshot_timestamp) as snapshot_id, *
     FROM flight_reservations
     WHERE
