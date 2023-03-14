@@ -10,4 +10,4 @@ SCHEMA >
 
 ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toStartOfMonth(snapshot_id)"
-ENGINE_SORTING_KEY "flight_number, snapshot_id"
+ENGINE_SORTING_KEY "snapshot_id, flight_number"
