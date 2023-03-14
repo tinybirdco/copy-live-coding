@@ -1,13 +1,13 @@
 
 SCHEMA >
     `snapshot_id` DateTime `json:$.snapshot_id`,
-    `timestamp` DateTime64(3) `json:$.timestamp`,
+    `timestamp` DateTime `json:$.timestamp`,
     `transaction_id` String `json:$.transaction_id`,
     `flight_number` String `json:$.flight_number`,
     `extra_bags` Int16 `json:$.extra_bags`,
-    `priority_boarding` Int16 `json:$.priority_boarding`,
+    `priority_boarding` Int8 `json:$.priority_boarding`,
     `meal_choice` String `json:$.meal_choice`
 
 ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toStartOfMonth(snapshot_id)"
-ENGINE_SORTING_KEY "flight_number, snapshot_id"
+ENGINE_SORTING_KEY "snapshot_id, flight_number"

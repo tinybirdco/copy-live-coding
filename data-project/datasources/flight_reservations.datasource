@@ -1,11 +1,11 @@
 
 SCHEMA >
-    `extra_bags` Int16 `json:$.extra_bags`,
-    `flight_number` String `json:$.flight_number`,
-    `meal_choice` String `json:$.meal_choice`,
-    `priority_boarding` Int16 `json:$.priority_boarding`,
     `timestamp` DateTime `json:$.timestamp`,
-    `transaction_id` String `json:$.transaction_id`
+    `transaction_id` String `json:$.transaction_id`,
+    `flight_number` String `json:$.flight_number`,
+    `extra_bags` Int16 `json:$.extra_bags`,
+    `priority_boarding` Int8 `json:$.priority_boarding`,
+    `meal_choice` String `json:$.meal_choice`
 
 ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toYear(timestamp)"

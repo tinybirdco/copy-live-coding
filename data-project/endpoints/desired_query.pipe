@@ -4,12 +4,13 @@ SQL >
     %
     SELECT 
     flight_number,
+    transaction_id,
     extra_bags,
     priority_boarding,
     meal_choice
     FROM flight_reservations
     where 1
-    and flight_number = {{String(flight, 'AV2310', description="Flight number", required=True)}}
+    and flight_number = {{String(flight, 'AF5445', description="Flight number", required=True)}}
     order by timestamp desc
     limit 1 BY transaction_id
 
