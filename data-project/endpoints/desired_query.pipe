@@ -4,6 +4,7 @@ SQL >
     %
     SELECT 
     flight_number,
+    transaction_id,
     extra_bags,
     priority_boarding,
     meal_choice
