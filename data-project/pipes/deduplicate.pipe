@@ -44,7 +44,7 @@ SQL >
             SELECT snapshot_id FROM last_batch_deduplicates LIMIT 1 BY snapshot_id
        ) as latest_snapshot_id
     SELECT
-        ifNull(latest_snapshot_id, toDateTime(0)) as snapshot_id,
+        ifNull(latest_snapshot_id, toStartOfMinute(now() - interval 1 minute) as snapshot_id,
         timestamp,
         transaction_id,
         flight_number,
