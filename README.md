@@ -21,7 +21,7 @@ See our guide about [deduplication Strategies in ClickHouse](https://www.tinybir
 
 ## Scheduled Data Copy API
 
-[Docs](https://www.tinybird.co/docs/api-reference/pipe-api.html#scheduled-data-copy-beta)
+[Docs](https://www.tinybird.co/docs/api-reference/pipe-api.html#data-copy-header)
 
 We will showcase how to _create a copy pipe_ without scheduling:
 
