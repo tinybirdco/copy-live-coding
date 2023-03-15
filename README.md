@@ -23,7 +23,7 @@ See [Deduplication Strategies in ClickHouse](https://www.tinybird.co/docs/guides
 
 [Docs](https://www.tinybird.co/docs/api-reference/pipe-api.html#scheduled-data-copy-beta)
 
-We will showchase how to create a copy pipe without scheduling:
+We will showchase how to _create a copy pipe_ without scheduling:
 
 ```bash
 curl -X POST \
@@ -32,15 +32,15 @@ curl -X POST \
     -d "target_datasource=:destination_datasource"
 ```
 
-And how to run a one time copy:
+to run a _One time copy_:
 
 ```bash
 curl -X POST \
     -H "Authorization: Bearer $TOKEN" \
-        "$HOST/v0/pipes/:pipe/copy" \
+        "$HOST/v0/pipes/:pipe/copy"
 ```
 
-And then the most common use case, that is creating a Scheduled Data Copy:
+And then the most common use case, that is creating a _Scheduled Data Copy_:
 
 ```bash
 curl -X POST \
@@ -119,4 +119,20 @@ curl -X POST \
         "$HOST/v0/pipes/change_sk/copy" \
 ```
 
-## Example 2: Scheduling snapshots
+We can compare the performance improvement querying the in our `desired-query` endpoint.
+
+## Example 2: Scheduled snapshots
+
+For the shake of the demo we will perform a snapshot every minute, leaving the full picture of the reservations in the `flight_snapshots` Data Source. We identify each snapshot with a DateTime column called `snapshot_id`.
+
+To do so, we will use the pipe we have prepared, `deduplicate.pipe`, and convert it into a scheduled copy pipe.
+
+```bash
+curl -X POST \
+    -H "Authorization: Bearer $TOKEN" \
+        "$HOST/v0/pipes/deduplicate/nodes/all_together/copy" \
+    -d "target_datasource=flight_snapshots" \
+    -d "schedule_cron=*/1 * * * *"
+```
+
+Lastly we can create a new query calling the latest snapshot —or a lambda architecture like, calling the latest snapshot and deduplicating as well the rows that changed from the latest snapshot until now— and see the differences in performance.

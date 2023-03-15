@@ -2,7 +2,7 @@ TOKEN "snapshot_token" READ
 
 NODE last_batch_deduplicates
 DESCRIPTION >
-    deduplicate
+    Deduplicate the reservations that arrived between the latest snapshot and the snapshot we are preparing
 
 SQL >
 
@@ -18,6 +18,9 @@ SQL >
 
 
 NODE prev_snapshot
+DESCRIPTION >
+    Get the unmodified rows in the snapshot window we are preparing.
+
 SQL >
 
         SELECT snapshot_id, timestamp, transaction_id, flight_number, extra_bags, priority_boarding, meal_choice
@@ -31,6 +34,9 @@ SQL >
 
 
 NODE all_together
+DESCRIPTION >
+    Apply the current _snapshot_id_ to the unmodified rows. Then, union both nodes to have the full picture.
+
 SQL >
 
     WITH
