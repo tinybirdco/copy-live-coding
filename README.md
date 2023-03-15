@@ -116,16 +116,16 @@ Run an on-demand copy:
 ```bash
 curl -X POST \
     -H "Authorization: Bearer $TOKEN" \
-        "$HOST/v0/pipes/change_sk/copy" \
+        "$HOST/v0/pipes/change_sk/copy"
 ```
 
-We can compare the performance improvement querying our `desired-query` endpoint.
+We can compare the performance improvement querying our `status-query` endpoint.
 
 ## Example 2: Scheduled snapshots
 
 For the shake of the demo we will perform a snapshot every minute, leaving the full picture of the reservations in the `flight_snapshots` Data Source. We identify each snapshot with a DateTime column called `snapshot_id`.
 
-To do so, we will use the pipe we have prepared, `deduplicate.pipe`, and convert it into a scheduled copy pipe.
+To do so, we will use the pipe we have prepared, `deduplicate.pipe`[^2], and convert it into a scheduled copy pipe.
 
 ```bash
 curl -X POST \
@@ -138,3 +138,5 @@ curl -X POST \
 Lastly we can create a new query calling the latest snapshot —or a lambda architecture like, calling the latest snapshot and deduplicating as well the rows that changed from the latest snapshot until now— and see the differences in performance.
 
 [^1]: Although we use mostly use the API in this example, we have included some [CLI](https://www.tinybird.co/docs/cli.html) commands for convenience. [Check Getting started with the CLI](https://www.tinybird.co/docs/quick-start-cli.html) in case you're not yet familiar with it.
+
+[^2]: Be sure that the `deduplicate` pipe is not published as API endpoint. If you did a `tb push`, you can do `tb pipe unpublish deduplicate` before converting it into a copy pipe.
