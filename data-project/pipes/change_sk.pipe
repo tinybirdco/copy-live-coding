@@ -1,0 +1,6 @@
+NODE copy_node
+SQL >
+
+    SELECT * FROM flight_reservations
+
+
