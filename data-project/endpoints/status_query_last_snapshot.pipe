@@ -1,0 +1,35 @@
+NODE latest_snapshot
+SQL >
+
+    %
+        SELECT 
+        flight_number,
+        transaction_id,
+        extra_bags,
+        priority_boarding,
+        meal_choice
+        FROM flight_snapshots
+        where 1
+        and flight_number = {{String(flight, 'AF5445', description="Flight number", required=True)}}
+        and snapshot_id = (select max(snapshot_id) from flight_snapshots)
+
+
+
+NODE result
+SQL >
+
+    %
+        SELECT 
+        flight_number,
+        count() as passengers,
+        sum(extra_bags) as extra_bags,
+        sum(priority_boarding) priority_boarding,
+        sumIf(1, meal_choice = 'vegetarian') vegetarian_meals,
+        sumIf(1, meal_choice = 'vegan') vegan_meals,
+        sumIf(1, meal_choice = 'halal') halal_meals,
+        sumIf(1, meal_choice = 'kosher') kosher_meals,
+        sumIf(1, meal_choice = 'gluten') gluten_meals
+        FROM latest_snapshot
+        GROUP BY flight_number
+
+
