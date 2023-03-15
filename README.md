@@ -1,11 +1,11 @@
 # Deduplicating OLAP with scheduled data snapshots - Live Coding Session
 
-OLAP databases are optimized for fast ingestion and bulk processing, so it is always better to transform update/delete scenarios into append + deduplicate.
+OLAP databases are optimized for fast ingestion and bulk processing, so it is always better to transform update/delete scenarios into append + deduplicate ones.
 
-Duplicates happen when:
+When duplicates happen in analytical databases:
 
-- Upserts
-- Constant ingestion: lots of rows inserted at different times with the same primary key
+- When doing upserts: this is done in ClickHouse tipically using a [ReplacingMergeTree](https://clickhouse.com/docs/en/engines/table-engines/mergetree-family/replacingmergetree/).
+- When having constant ingestion: lots of rows inserted at different times with the same primary key
 
 Strategies to deduplicate:
 
@@ -17,13 +17,13 @@ Strategies to deduplicate:
 
 1. Using Snapshots. -> Covered in this repo and Live Coding Session.
 
-See [Deduplication Strategies in ClickHouse](https://www.tinybird.co/docs/guides/deduplication-strategies.html) for more details.
+See our guide about [deduplication Strategies in ClickHouse](https://www.tinybird.co/docs/guides/deduplication-strategies.html) for more details.
 
 ## Scheduled Data Copy API
 
 [Docs](https://www.tinybird.co/docs/api-reference/pipe-api.html#scheduled-data-copy-beta)
 
-We will showchase how to _create a copy pipe_ without scheduling:
+We will showcase how to _create a copy pipe_ without scheduling:
 
 ```bash
 curl -X POST \
@@ -32,7 +32,7 @@ curl -X POST \
     -d "target_datasource=:destination_datasource"
 ```
 
-to run a _One time copy_:
+to run an _on-demand copy_:
 
 ```bash
 curl -X POST \
@@ -111,7 +111,7 @@ curl -X POST \
     -d "target_datasource=flight_reservations_sk"
 ```
 
-Run a one time copy:
+Run an on-demand copy:
 
 ```bash
 curl -X POST \
@@ -119,7 +119,7 @@ curl -X POST \
         "$HOST/v0/pipes/change_sk/copy" \
 ```
 
-We can compare the performance improvement querying the in our `desired-query` endpoint.
+We can compare the performance improvement querying our `desired-query` endpoint.
 
 ## Example 2: Scheduled snapshots
 
