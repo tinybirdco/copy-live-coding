@@ -59,7 +59,7 @@ TOKEN = <PIPE:CREATE> and <DATASOURCES:APPEND:destination_datasource> token
 HOST = https://api.tinybird.co | https://api.us-east.tinybird.co
 ```
 
-To speed up the testing you can authenticate with `tb auth` and then run
+To speed up the testing you can authenticate with `tb auth`[^1] and then run
 
 ```bash
 TOKEN=$(cat .tinyb | jq .token | sed 's/"//g') 
@@ -136,3 +136,5 @@ curl -X POST \
 ```
 
 Lastly we can create a new query calling the latest snapshot —or a lambda architecture like, calling the latest snapshot and deduplicating as well the rows that changed from the latest snapshot until now— and see the differences in performance.
+
+[^1]: Although we use mostly use the API in this example, we have included some [CLI](https://www.tinybird.co/docs/cli.html) commands for convenience. [Check Getting started with the CLI](https://www.tinybird.co/docs/quick-start-cli.html) in case you're not yet familiar with it.
